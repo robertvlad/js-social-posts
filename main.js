@@ -162,3 +162,46 @@ function formatDate(dateStr) {
 function isPostLiked(postId) {
     return userLikes.includes(postId)
 }
+
+//LIKE BUTTON
+
+const likeButtons = document.querySelectorAll(".js-like-button");
+const likeCounters = document.querySelectorAll(".js-likes-counter")
+
+for (let i = 0; i < likeButtons.length; i++) {
+
+    const element = likeButtons[i];
+    element.addEventListener("click", function (e){
+        
+        e.preventDefault();
+
+        if (!element.classList.contains("like-button--liked")) {
+
+            element.classList.add("like-button--liked");
+
+            //Recuperare il contatore associato al post tramite l'indice i
+            const thisCounter = likeCounters[i];
+
+            //Leggere il valore attuale del contatore
+            const number = parseInt(thisCounter.innerHTML);
+
+            //Icrementare il valore del contatore
+            thisCounter.innerHTML = number + 1;
+
+        } else {
+
+            //Togliere il like
+            element.classList.remove("like-button--liked");
+
+            //Recuperare il contatore associato al post tramite l'indice i
+            const thisCounter = likeCounters[i];
+
+            //Leggere il valore attuale del contatore
+            const number = parseInt(thisCounter.innerHTML);
+
+            //decrementare il valore del contatore
+            thisCounter.innerHTML = number - 1;
+
+        }
+    })
+}
