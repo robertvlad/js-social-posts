@@ -1,3 +1,4 @@
+//ARRAY DI POST PRESENTI NEL FEED. OGNI ELEMENTO DEVE MOSTRARE LE SUE PROPRIETA'
 const posts = [
     {
         "id": 1,
@@ -55,3 +56,109 @@ const posts = [
         "created": "2021-03-05"
     }
 ];
+
+//Variabili
+
+const containerFeed = document.getElementById("container")
+
+const userLikes = [];
+
+
+// Stampa dei post nel feed
+
+for (let i = 0; i < posts.length; i++) {
+    const currentPost = posts[i];
+    containerFeed.innerHTML += postTemplate(currentPost);
+}
+
+//FUNZIONE PER GENERARE LA CARD DI UN POSTO NEL FEED
+
+function postTemplate(postData) {
+
+    //Destructuring dell'ogetto aeeganto all'array
+    const { id, author, content, created, media, likes } = postData;
+    return `
+    <div class="post">
+        <div class="post__header">
+            <div class="post-meta">                    
+                <div class="post-meta__icon">
+                    ${author.image ? profileWithImage(author) : profileWithImage(author)}                    
+                </div>
+                <div class="post-meta__data">
+                    <div class="post-meta__author">
+                        ${author.name}
+                    </div>
+                    <div class="post-meta__time">
+                        ${formatDate(created)}
+                    </div>
+                </div>                    
+            </div>
+        </div>
+        <div class="post__text">
+            ${content}
+        </div>
+        <div class="post__image">
+            <img src="${media}" alt="">
+        </div>
+        <div class="post__footer">
+            <div class="likes js-likes">
+                <div class="likes__cta">
+                    <a class="like-button  ${isPostLiked(id) ? 'like-button--liked' : ""} js-like-button href="#">
+                        <i class="like-button__icon fas fa-thumbs-up"></i>
+                        <span class="like-button__label">Mi Piace</span>
+                    </a>
+                </div>
+                <div class="likes__counter">
+                    Piace a <b id="like-counter-${id}" class="js-likes-counter">${likes}</b> persone
+                </div>
+            </div> 
+        </div>            
+    </div>
+
+    `
+}
+
+
+//BONUS 2 permettere di avere le inizili dell'utente nel caso in cui non abbia una immagine del profilo
+
+function profileWithImage (userData) {
+    const { name, image } = userData;
+    return `<img class="profile-pic" src="${image}" alt="${name}"> ` 
+}
+
+function profileWithoutImage (userData) {
+
+    //Destructuring dell'oggetto
+    const { name } = userData;
+
+    //Generiamo le iniziali dell'utente
+    const nameParts = name.split(" ");
+    
+    const letters = [];
+    for (let i = 0; i < nameParts.length; i++) {
+        const namePart = nameParts[i];
+        const initialLetter = namePart[0];
+        letters.push(initialLetter);
+    }
+
+    const initials = letters.join("");
+ 
+    return`
+        <div class="profile-pic-default">
+            <span>${initials}</span>
+        </div>
+    `
+}
+
+
+//BONUS 1 FAR VISUALIZZARE LA DATA NEL FORMATO ITALIANO 
+
+function formatDate(dateStr) {
+    return dateStr.split("-").reverse().join("/")
+}
+
+//Funzione per i like
+
+function isPostLiked(postId) {
+    return userLikes.includes(postId)
+}
